@@ -2,13 +2,16 @@ import Link from "next/link";
 import type { Product } from "@/lib/mock-data";
 import { StockBadge } from "@/components/ui/StockBadge";
 import { DeliveryBadge } from "@/components/ui/DeliveryBadge";
+import { OEMTag } from "@/components/ui/OEMTag";
 import { Button } from "@/components/ui/Button";
 
 export function ProductCard({ product }: { product: Product }) {
+  const oemShow = product.oem.slice(0, 2);
+
   return (
-    <article className="overflow-hidden rounded-2xl border border-[#CBD5E1] bg-white transition-colors hover:border-primary/30">
-      <Link href={`/product/${product.slug}`} className="block aspect-square bg-[#F8FAFC] p-4">
-        <div className="flex h-full w-full items-center justify-center rounded-xl bg-white text-[#64748B]">
+    <article className="flex flex-col overflow-hidden rounded-card-lg border border-border bg-surface shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-card-hover">
+      <Link href={`/product/${product.slug}`} className="block aspect-square bg-surface-muted p-3">
+        <div className="flex h-full w-full items-center justify-center rounded-input bg-surface text-muted">
           {product.image ? (
             <img src={product.image} alt={product.name} className="h-full w-full object-contain" />
           ) : (
@@ -16,19 +19,31 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </div>
       </Link>
-      <div className="p-4">
-        <p className="text-xs font-mono text-[#64748B]">{product.sku}</p>
+      <div className="flex flex-1 flex-col p-4">
+        <p className="text-xs font-mono text-muted">{product.sku}</p>
+        <p className="mt-0.5 text-xs font-medium text-text-secondary">{product.brand}</p>
         <Link href={`/product/${product.slug}`}>
-          <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-[#0F172A] hover:text-primary">
+          <h3 className="mt-1.5 line-clamp-2 text-sm font-semibold leading-snug tracking-tight text-text-main hover:text-primary">
             {product.name}
           </h3>
         </Link>
-        <p className="mt-1 text-xs text-[#334155]">{product.brand}</p>
-        <p className="mt-2 text-lg font-semibold text-[#0F172A]">{product.price.toFixed(2)} Lei</p>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+        {oemShow.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {oemShow.map((code) => (
+              <OEMTag key={code} code={code} />
+            ))}
+          </div>
+        )}
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <StockBadge status={product.stockStatus} />
           <DeliveryBadge eta={product.deliveryETA} />
         </div>
+        <p className="mt-3 text-lg font-semibold tracking-tight text-text-main">{product.price.toFixed(2)} Lei</p>
+        {product.priceB2B != null && (
+          <p className="mt-0.5 text-xs text-muted">
+            Preț partener la <Link href="/account" className="text-primary hover:underline">autentificare</Link>
+          </p>
+        )}
         <div className="mt-3">
           <Button href={`/product/${product.slug}`} variant="primary" className="w-full">
             Adaugă în coș

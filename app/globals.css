@@ -7,6 +7,19 @@
     @apply antialiased;
   }
   body {
-    @apply bg-[#F8FAFC] text-[#0F172A];
+    @apply bg-soft-bg text-text-main;
   }
+}
+
+/* Premium: section rhythm and hierarchy */
+.section-tag {
+  @apply text-xs font-medium uppercase tracking-wider text-muted;
+}
+.section-title {
+  @apply text-xl font-semibold tracking-tight text-text-main md:text-2xl;
+}
+
+/* Safe area for sticky bottom bar on notched devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
